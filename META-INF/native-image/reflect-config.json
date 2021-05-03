@@ -1,0 +1,74 @@
+[
+  {
+    "name":"oracle.jdbc.internal.ACProxyable",
+    "allDeclaredConstructors" : true,
+    "allDeclaredMethods" : true
+  },
+  {
+    "name":"oracle.jdbc.driver.T4CDriverExtension",
+    "methods":[{"name":"<init>","parameterTypes":[] }]
+  },
+  {
+    "name" : "oracle.jdbc.driver.T2CDriverExtension",
+    "methods":[{"name":"<init>","parameterTypes":[] }]
+  },
+  {
+    "name" : "oracle.jdbc.driver.ShardingDriverExtension",
+    "methods":[{"name":"<init>","parameterTypes":[] }]
+  },
+  {
+    "name":"oracle.net.ano.Ano",
+    "methods":[{"name":"<init>","parameterTypes":[] }]
+  },
+  {
+    "name":"oracle.net.ano.AuthenticationService",
+    "methods":[{"name":"<init>","parameterTypes":[] }]
+  },
+  {
+    "name":"oracle.net.ano.DataIntegrityService",
+    "methods":[{"name":"<init>","parameterTypes":[] }]
+  },
+  {
+    "name":"oracle.net.ano.EncryptionService",
+    "methods":[{"name":"<init>","parameterTypes":[] }]
+  },
+  {
+    "name":"oracle.net.ano.SupervisorService",
+    "methods":[{"name":"<init>","parameterTypes":[] }]
+  },
+  {
+    "name":"oracle.jdbc.driver.Message11",
+    "methods":[{"name":"<init>","parameterTypes":[] }]
+  },
+  {
+    "name":"oracle.sql.TypeDescriptor",
+    "allDeclaredConstructors" : true,
+    "allDeclaredFields" : true
+  },
+  {
+    "name" : "oracle.sql.AnyDataFactory",
+    "methods":[{"name":"<init>","parameterTypes":[] }]
+  },
+  {
+    "name" : "oracle.sql.TypeDescriptorFactory",
+    "methods":[{"name":"<init>","parameterTypes":[] }]
+  },
+  {
+    "name" : "com.sun.rowset.providers.RIOptimisticProvider",
+    "methods":[{"name":"<init>","parameterTypes":[] }]
+  },
+  {
+    "name" : "oracle.jdbc.logging.annotations.Supports",
+    "allDeclaredConstructors" : true,
+    "allDeclaredMethods" : true
+  },
+  {
+    "name" : "oracle.jdbc.logging.annotations.Feature",
+    "allDeclaredConstructors" : true,
+    "allDeclaredMethods" : true
+  },
+  {
+    "name" : "java.sql.SQLXML",
+    "methods":[{"name":"<init>","parameterTypes":[] }]
+  }
+]

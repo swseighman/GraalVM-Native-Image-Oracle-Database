@@ -1,0 +1,16 @@
+{
+  "resources":[
+    {"pattern":"META-INF/services/java.sql.Driver"},
+    {"pattern":"oracle/sql/converter_xcharset/.*.glb$"},
+    {"pattern":"oracle/jdbc/driver/errorMap.xml"},
+    {"pattern":"oracle/jdbc/defaultLoggingConfig.properties"},
+    {"pattern":"oracle/jdbc/defaultConnectionProperties.properties"},
+    {"pattern":"javax/sql/rowset/rowset.properties"}
+  ],
+  "bundles": [
+    {"name":"oracle.net.jdbc.nl.mesg.NLSR"},
+    {"name":"oracle.net.mesg.Message"},
+    {"name":"oracle.jdbc.driver.Messages"},
+    {"name":"com/sun/rowset/RowSetResourceBundle"}
+  ]
+}

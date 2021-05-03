@@ -1,0 +1,26 @@
+[
+  {
+    "name":"java.net.InetAddress",
+    "allDeclaredClasses" : true,
+    "allDeclaredFields" : true,
+    "methods" : [
+      { "name" : "<init>", "parameterTypes" : [] }
+    ]
+  },
+  {
+    "name":"java.net.Inet4Address",
+    "allDeclaredClasses" : true,
+    "allDeclaredFields" : true,
+    "methods" : [
+      { "name" : "<init>", "parameterTypes" : [] }
+    ]
+  },
+  {
+    "name":"java.net.Inet6Address",
+    "allDeclaredClasses" : true,
+    "allDeclaredFields" : true,
+    "methods" : [
+      { "name" : "<init>", "parameterTypes" : [] }
+    ]
+  }
+]
