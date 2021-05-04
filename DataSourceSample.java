@@ -9,14 +9,14 @@ import java.sql.ResultSet;
 
 public class DataSourceSample {
   // For Kubernetes version
-  // final static String DB_URL= "jdbc:oracle:thin:@127.0.0.1:42877/XEPDB1";
-  // final static String DB_USER = "system";
-  // final static String DB_PASSWORD = "mysecurepassword";
-
-  // For Container version
-  final static String DB_URL= "jdbc:oracle:thin:@localhost:1521/XE";
+  final static String DB_URL= "jdbc:oracle:thin:@localhost:45485/XEPDB1";
   final static String DB_USER = "system";
   final static String DB_PASSWORD = "mysecurepassword";
+
+  // For Container version
+  // final static String DB_URL= "jdbc:oracle:thin:@localhost:1521/XE";
+  // final static String DB_USER = "system";
+  // final static String DB_PASSWORD = "mysecurepassword";
 
   public static void main(String args[]) throws SQLException {
     String query = "SELECT * FROM DUAL";

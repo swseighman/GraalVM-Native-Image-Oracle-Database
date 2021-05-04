@@ -20,23 +20,29 @@ Create the following directories on your local filesystem:
 The directories must be writable by user `UID 54321`, which is the Oracle user within the container. With root access, change the ownership of the directory:
 
 ```
-$ chown 54321:54321 /home/<username>/oradata;
-$ chown 54321:54321 /home/<username>/scripts/setup;
-$ chown 54321:54321 /home/<username>/scripts/startup;
+$ chown 54321:54321 /home/<username>/oradata
+$ chown 54321:54321 /home/<username>/scripts/setup
+$ chown 54321:54321 /home/<username>/scripts/startup
 ```
-
+Clone the Oracle container image repository:
 ```
 $ git clone https://github.com/oracle/docker-images.git
+```
+Change to the directory containing the Oracle Database container files:
+```
 $ cd docker-images/OracleDatabase/SingleInstance/dockerfiles
+```
+Build the database image:
+```
 $ ./buildDockerImage.sh -v 18.4.0 -x
 ```
-
+Check that the image was created:
 ```
 $ docker images
 REPOSITORY         TAG          IMAGE ID       CREATED         SIZE
 oracle/database    18.4.0-xe    827aba9c0902   4 days ago      6.03GB
 ```
-
+Run the container:
 ```
 $ docker run --rm --name myexdb-1 \
 -p 1521:1521 -p 5500:5500 \
@@ -70,13 +76,15 @@ No patches have been applied
 ===========================================================
 
 ```
+
+Check to confirm it's running:
 ```
 $ docker ps
 CONTAINER ID   IMAGE                        COMMAND                  CREATED           STATUS     PORTS                                                            NAMES
 cd58d5a0f3a1   oracle/database:18.4.0-xe    "/bin/sh -c 'exec $O…"   48 minutes ago   Up 48 minutes (healthy)   0.0.0.0:1521->1521/tcp, 0.0.0.0:5500->5500/tcp     myexdb-1
 
 ```
-
+Install SQL*PLUS client (see [link](https://www.oracle.com/database/technologies/instant-client/linux-x86-64-downloads.html)) and connect to the running database:
 ```
 $ sqlplus system/mysecurepassword@localhost:1521/XE
 
@@ -101,15 +109,19 @@ SQL> exit
 Disconnected from Oracle Database 18c Express Edition Release 18.0.0.0.0 - Production
 Version 18.4.0.0.0
 ```
+
+Congratulations, you now have an Oracle Database 18c XE container running!
+
+
 ### Build and Compile the Application
 
 First, clone the following repository:
 ```
-$ git clone 
+$ git clone https://github.com/swseighman/GraalVM-Native-Image-Oracle-Database.git
 ```
 
 ```
-$ cd 
+$ cd GraalVM-Native-Image-Oracle-Database
 ```
 
 Compile the application:
@@ -117,6 +129,7 @@ Compile the application:
 ```
 $ javac -cp .:/ojdbc11-21.1.0.0.jar DataSourceSample.java
 ```
+***NOTE**: If you need a different version of the Oracle JDBC drivers, you can download it [here](https://www.oracle.com/database/technologies/maven-central-guide.html).*
 
 Run the application:
 ```
@@ -128,9 +141,11 @@ Database Username is: SYSTEM
 
 'SELECT * FROM DUAL' returned: X
 ```
+Let's perform a query:
 ```
 $ java -cp .:/ojdbc11-21.1.0.0.jar DataSourceSample "SELECT TO_CHAR (SYSDATE, 'MM-DD-YYYY HH24:MI:SS') \"NOW\" FROM DUAL"
 ```
+For a simple performance test, we'll time how long it takes to connect to the database and perform the same query:
 ```
 $ time java -cp .:/ojdbc11-21.1.0.0.jar DataSourceSample "SELECT TO_CHAR (SYSDATE, 'MM-DD-YYYY HH24:MI:SS') \"NOW\" FROM DUAL"
 Driver Name: Oracle JDBC driver
@@ -145,6 +160,7 @@ user    0m1.324s
 sys     0m0.118s
 
 ```
+As you can see, it takes **947ms** to complete the query *(your actual time may vary)*.
 
 Now let's create a native image executable of the DataSourceSample application:
 ```
@@ -177,7 +193,7 @@ Database Username is: SYSTEM
 
 'SELECT * FROM DUAL' returned: X
 ```
-
+And we'll run the same performance test using the native image executable:
 ```
  $ time ./datasourcesample "SELECT TO_CHAR (SYSDATE, 'MM-DD-YYYY HH24:MI:SS') \"NOW\" FROM DUAL"
 Driver Name: Oracle JDBC driver
@@ -192,6 +208,7 @@ user    0m0.016s
 sys     0m0.000s
 
 ```
+Impressive, it takes only **40ms** using the native image executable!
 
 ### Using Oracle Database 18c XE with Kubernetes
 
