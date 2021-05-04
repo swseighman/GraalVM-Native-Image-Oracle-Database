@@ -346,6 +346,8 @@ namespace/oracle-db created
 Show the namespace:
 ```
 $ kubectl get namespace oracle-db
+NAME        STATUS   AGE
+oracle-db   Active   5h46m
 ```
 Create a ConfigMap:
 ```
