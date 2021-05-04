@@ -185,7 +185,7 @@ WARNING: Method java.sql.SQLXML.<init>() not found.
 ```
 
 ```
-$ ./datasourcesample -cp .:/ojdbc11-21.1.0.0.jar DataSourceSample
+$ ./datasourcesample
 Driver Name: Oracle JDBC driver
 Driver Version: 21.1.0.0.0
 Default Row Prefetch Value is: 20
@@ -264,14 +264,201 @@ $ minikube start
 🏄  Done! kubectl is now configured to use "minikube" cluster and "default" namespace by default
 ```
 
+Check the status of `minikube`:
+```
+$ minikube status
+minikube
+type: Control Plane
+host: Running
+kubelet: Running
+apiserver: Running
+kubeconfig: Configured
+```
+
+Open the dashboard to view the current state of the kubernetes cluster:
+```
+$ minikube dashboard
+🔌  Enabling dashboard ...
+    ▪ Using image kubernetesui/dashboard:v2.1.0
+    ▪ Using image kubernetesui/metrics-scraper:v1.0.4
+🤔  Verifying dashboard health ...
+🚀  Launching proxy ...
+🤔  Verifying proxy health ...
+🎉  Opening http://127.0.0.1:36659/api/v1/namespaces/kubernetes-dashboard/services/http:kubernetes-dashboard:/proxy/ in your default browser...
+👉  http://127.0.0.1:36659/api/v1/namespaces/kubernetes-dashboard/services/http:kubernetes-dashboard:/proxy/
+```
+***CTRL-Click*** the dashboard URL above to open the dashboard.
+
+![](images/Screenshot202021-05-0420082427.png)
+Great, our kubernetes environment is up and running.
+
 #### Build an Oracle Database XE Container in Kubernetes
 ```
 $ git clone https://github.com/oracle/docker-images.git
 $ cd docker-images/OracleDatabase/SingleInstance/dockerfiles
 $ eval $(minikube docker-env)
-$ ./buildDockerImage.sh -v 18.4.0 -x
+$ ./buildContainerImage.sh -v 18.4.0 -x
 ```
 
+***NOTE**: The image build may take 5-8 minutes.*
+
+You can check the build logs from the `minikube dashboard`.
+
+Click on `Pods`:
+
+![](images/Screenshot202021-05-04200824271.png)
+
+Then choose the Oracle Database container:
+
+![](images/Screenshot202021-05-0420090916.png)
+
+Next, click on the `Logs` icon:
+
+![](images/Screenshot202021-05-0420090756.png)
+
+![](images/Screenshot202021-05-0420090725.png)
+
+
+
+Now check to confirm the container image was created in the kubernetes environment:
+```
+$ minikube ssh
+docker@minikube:~$ docker images | grep oracle
+oracle/database         18.4.0-xe   1e981e6c95ca   About a minute ago   5.89GB
+oraclelinux             7-slim      f9b86bc68e2e   3 days ago           132MB
+```
+Create a namespace:
+```
+$ kubectl create namespace oracle-db
+namespace/oracle-db created
+```
+Show the namespace:
+```
+$ kubectl get namespace oracle-db
+```
+Create a ConfigMap:
+```
+$ kubectl create configmap oradb --from-env-file=oracle.properties -n oracle-db
+configmap/oradb created
+```
+Create the deployment and service:
+```
+$ kubectl apply -f oradb18xe.yaml -n oracle-db
+deployment.apps/oracle18xe created
+service/oracle18xe created
+```
+Show the deployment:
+```
+$ kubectl get deployments -n oracle-db
+NAME         READY   UP-TO-DATE   AVAILABLE   AGE
+oracle18xe   1/1     1            1           15s
+```
+Show the running pods in the namespace:
+```
+$ kubectl get pods -n oracle-db
+NAME                         READY   STATUS    RESTARTS   AGE
+oracle18xe-5d96fc898-g2bvt   1/1     Running   0          96s
+```
+There are various other commands to describe everything in detail:
+```
+$ kubectl describe deployments -n oracle-db
+$ kubectl describe pods -n oracle-db
+$ kubectl describe secrets -n oracle-db
+$ kubectl describe services -n oracle-db
+```
+Show the running services:
+```
+$ kubectl get services -n oracle-db
+NAME         TYPE       CLUSTER-IP      EXTERNAL-IP   PORT(S)                         AGE
+oracle18xe   NodePort   10.107.53.199   <none>        1521:31918/TCP,5500:32380/TCP   11m
+```
+Display the service ports (and IP):
+```
+$ minikube service oracle18xe -n oracle-db --url
+🏃  Starting tunnel for service oracle18xe.
+|-----------|------------|-------------|------------------------|
+| NAMESPACE |    NAME    | TARGET PORT |          URL           |
+|-----------|------------|-------------|------------------------|
+| oracle-db | oracle18xe |             | http://127.0.0.1:45485 |
+|           |            |             | http://127.0.0.1:39599 |
+|-----------|------------|-------------|------------------------|
+http://127.0.0.1:45485  <--- Use this URL in the command below
+http://127.0.0.1:39599
+❗  Because you are using a Docker driver on linux, the terminal needs to be open to run it.
+```
+
+Use SQL*PLUS to access the running database (use the service IP/port above):
+```
+ $ sqlplus system/mysecurepassword@127.0.0.1:45485/XEPDB1
+
+SQL*Plus: Release 21.0.0.0.0 - Production on Tue May 4 09:17:32 2021
+Version 21.1.0.0.0
+
+Copyright (c) 1982, 2020, Oracle.  All rights reserved.
+
+
+Connected to:
+Oracle Database 18c Express Edition Release 18.0.0.0.0 - Production
+Version 18.4.0.0.0
+
+SQL>
+```
+
+### Using the DataSourceSample Application with Kubernetes
+Edit the `DataSourceSample.java` file and uncomment the kubernetes lines, then comment out the container lines. Make certain to replace the port within the `DB_URL` line with the one displayed in the service above (in this case, **45485** )
+```
+// For Kubernetes version
+   final static String DB_URL= "jdbc:oracle:thin:@127.0.0.1:45485/XEPDB1";
+   final static String DB_USER = "system";
+   final static String DB_PASSWORD = "mysecurepassword";
+
+  // For Container version
+  // final static String DB_URL= "jdbc:oracle:thin:@localhost:1521/XE";
+  // final static String DB_USER = "system";
+  // final static String DB_PASSWORD = "mysecurepassword";
+```
+After saving the changes, compile the application once again:
+
+```
+$ javac -cp .:/ojdbc11-21.1.0.0.jar DataSourceSample.java
+```
+
+Run the application:
+```
+$ java -cp .:/ojdbc11-21.1.0.0.jar DataSourceSample
+Driver Name: Oracle JDBC driver
+Driver Version: 21.1.0.0.0
+Default Row Prefetch Value is: 20
+Database Username is: SYSTEM
+
+'SELECT * FROM DUAL' returned: X
+```
+Of course, you can create a native image and run that version too:
+```
+$ native-image -cp .:/ojdbc11-21.1.0.0.jar DataSourceSample
+```
+```
+$ ./datasourcesample
+Driver Name: Oracle JDBC driver
+Driver Version: 21.1.0.0.0
+Default Row Prefetch Value is: 20
+Database Username is: SYSTEM
+
+'SELECT * FROM DUAL' returned: X
+```
+You can also use other tools like SQL Developer to access the database:
+
+![](images/Screenshot202021-05-0420092203.png)
+
+![](images/Screenshot202021-05-0420092358.png)
+
+
+To stop the kubernetes cluster, execute the following command:
 ```
 $ minikube stop
+✋  Stopping node "minikube"  ...
+🛑  Powering off "minikube" via SSH ...
+🛑  1 nodes stopped.
 ```
+
+### Summary
