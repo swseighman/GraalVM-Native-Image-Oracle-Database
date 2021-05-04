@@ -289,7 +289,8 @@ $ minikube dashboard
 ```
 ***CTRL-Click*** the dashboard URL above to open the dashboard.
 
-![](images/Screenshot202021-05-0420082427.png)
+![](images/Dashboard.png)
+
 Great, our kubernetes environment is up and running.
 
 #### Build an Oracle Database XE Container in Kubernetes
@@ -306,17 +307,17 @@ You can check the build logs from the `minikube dashboard`.
 
 Click on `Pods`:
 
-![](images/Screenshot202021-05-04200824271.png)
+![](images/DashboardPods.png)
 
 Then choose the Oracle Database container:
 
-![](images/Screenshot202021-05-0420090916.png)
+![](images/ChooseContainer.png)
 
 Next, click on the `Logs` icon:
 
-![](images/Screenshot202021-05-0420090756.png)
+![](images/LogIcon.png)
 
-![](images/Screenshot202021-05-0420090725.png)
+![](images/ContainerLogs.png)
 
 
 
@@ -448,9 +449,9 @@ Database Username is: SYSTEM
 ```
 You can also use other tools like SQL Developer to access the database:
 
-![](images/Screenshot202021-05-0420092203.png)
+![](images/SQLDeveloperLogin.png)
 
-![](images/Screenshot202021-05-0420092358.png)
+![](images/SQLDeveloperScript.png)
 
 
 To stop the kubernetes cluster, execute the following command:
