@@ -44,6 +44,8 @@ Build the database image:
 ```
 $ ./buildDockerImage.sh -v 18.4.0 -x
 ```
+***NOTE**: The image build may take 5-8 minutes.*
+
 Check that the image was created:
 ```
 $ docker images
@@ -170,7 +172,7 @@ sys     0m0.118s
 ```
 As you can see, it takes **947ms** to complete the query *(your actual time may vary)*.
 
-Now let's create a native image executable of the DataSourceSample application:
+Now let's create a native image executable of the `DataSourceSample` application:
 ```
 $ native-image -cp .:./ojdbc11-21.1.0.0.jar DataSourceSample
 [datasourcesample:46780]    classlist:   1,119.72 ms,  0.96 GB
