@@ -2,7 +2,7 @@
 
 ### Overview
 
-Many Java (and database) developers are interested in GraalVM's native image capabilities, specifically how it may contribute to better performance of database applications.  Until recently, the Oracle JDBC drivers wouldn't allow for building native images. That issue has been addressed as the new DB21c JDBC drivers have been instrumented with GraalVM configuration files in META-INF/native-image directory. 
+Many Java (and database) developers are interested in GraalVM's native image capabilities, specifically how it may contribute to better performance of database applications.  Until recently, the Oracle JDBC drivers wouldn't allow for building native images. That issue has been addressed as the new DB21c JDBC drivers have been instrumented with GraalVM configuration files in `META-INF/native-image` directory. 
 
 In addition to instrumenting the driver, the JDBC developer team has been actively working with the Helidon, Micronaut, and Quarkus teams to integrate the driver and companion jars with their GraalVM native images.
 
