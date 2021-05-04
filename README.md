@@ -135,13 +135,13 @@ $ cd GraalVM-Native-Image-Oracle-Database
 Compile the application:
 
 ```
-$ javac -cp .:/ojdbc11-21.1.0.0.jar DataSourceSample.java
+$ javac -cp .:./ojdbc11-21.1.0.0.jar DataSourceSample.java
 ```
 ***NOTE**: If you need a different version of the Oracle JDBC drivers, you can download it [here](https://www.oracle.com/database/technologies/maven-central-guide.html).*
 
 Run the application:
 ```
-$ java -cp .:/ojdbc11-21.1.0.0.jar DataSourceSample
+$ java -cp .:./ojdbc11-21.1.0.0.jar DataSourceSample
 Driver Name: Oracle JDBC driver
 Driver Version: 21.1.0.0.0
 Default Row Prefetch Value is: 20
@@ -151,11 +151,11 @@ Database Username is: SYSTEM
 ```
 Let's perform a query:
 ```
-$ java -cp .:/ojdbc11-21.1.0.0.jar DataSourceSample "SELECT TO_CHAR (SYSDATE, 'MM-DD-YYYY HH24:MI:SS') \"NOW\" FROM DUAL"
+$ java -cp .:./ojdbc11-21.1.0.0.jar DataSourceSample "SELECT TO_CHAR (SYSDATE, 'MM-DD-YYYY HH24:MI:SS') \"NOW\" FROM DUAL"
 ```
 For a simple performance test, we'll time how long it takes to connect to the database and perform the same query:
 ```
-$ time java -cp .:/ojdbc11-21.1.0.0.jar DataSourceSample "SELECT TO_CHAR (SYSDATE, 'MM-DD-YYYY HH24:MI:SS') \"NOW\" FROM DUAL"
+$ time java -cp .:./ojdbc11-21.1.0.0.jar DataSourceSample "SELECT TO_CHAR (SYSDATE, 'MM-DD-YYYY HH24:MI:SS') \"NOW\" FROM DUAL"
 Driver Name: Oracle JDBC driver
 Driver Version: 21.1.0.0.0
 Default Row Prefetch Value is: 20
@@ -172,7 +172,7 @@ As you can see, it takes **947ms** to complete the query *(your actual time may 
 
 Now let's create a native image executable of the DataSourceSample application:
 ```
-$ native-image -cp .:/ojdbc11-21.1.0.0.jar DataSourceSample
+$ native-image -cp .:./ojdbc11-21.1.0.0.jar DataSourceSample
 [datasourcesample:46780]    classlist:   1,119.72 ms,  0.96 GB
 [datasourcesample:46780]        (cap):     698.05 ms,  0.96 GB
 WARNING: Method java.sql.SQLXML.<init>() not found.
@@ -429,12 +429,12 @@ Edit the `DataSourceSample.java` file and uncomment the kubernetes lines, then c
 After saving the changes, compile the application once again:
 
 ```
-$ javac -cp .:/ojdbc11-21.1.0.0.jar DataSourceSample.java
+$ javac -cp .:./ojdbc11-21.1.0.0.jar DataSourceSample.java
 ```
 
 Run the application:
 ```
-$ java -cp .:/ojdbc11-21.1.0.0.jar DataSourceSample
+$ java -cp .:./ojdbc11-21.1.0.0.jar DataSourceSample
 Driver Name: Oracle JDBC driver
 Driver Version: 21.1.0.0.0
 Default Row Prefetch Value is: 20
@@ -444,7 +444,7 @@ Database Username is: SYSTEM
 ```
 Of course, you can create a native image and run that version too:
 ```
-$ native-image -cp .:/ojdbc11-21.1.0.0.jar DataSourceSample
+$ native-image -cp .:./ojdbc11-21.1.0.0.jar DataSourceSample
 ```
 ```
 $ ./datasourcesample
