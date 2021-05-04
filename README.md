@@ -2,22 +2,30 @@
 
 ### Overview
 
+Many Java (and database) developers are interested in GraalVM's native image capabilities, specifically how it may contribute to better performance of database applications.  Until recently, the Oracle JDBC drivers wouldn't allow for building native images. That issue has been addressed as the new DB21c JDBC drivers have been instrumented with GraalVM configuration files in METAINF/native-image directory. 
+
+In addition to instrumenting the driver, the JDBC developer team has been actively working with the Helidon, Micronaut, and Quarkus teams to integrate the driver and companion jars with their GraalVM native images.
+
+So, after viewing a recent video from Oleg Šelajev (see credits), it motivated me to duplicate the application and walk through the process of using the new Oracle JDBC drivers with an Oracle Database container for testing.
+
+We'll utilize an Oracle Database 18c XE instance running in a container and we'll create and run the same container in a Kubernetes environment.
+
 ### Credits
-The contents of this tutorial is based on a video originally recorded by **Oleg Šelajev**, see [this link](https://www.youtube.com/watch?v=QP83j_Q0CjE&list=PLirn7Sv6CJgGEBn0dVaaNojhi_4T3l2PF&index=2).
+The contents of this tutorial is based on a video originally recorded by **Oleg Šelajev** (see [link](https://www.youtube.com/watch?v=QP83j_Q0CjE&list=PLirn7Sv6CJgGEBn0dVaaNojhi_4T3l2PF&index=2)) and a tutorial by **Ron Ekins** (see [link](https://ronekins.com/2020/06/19/getting-started-with-kubernetes-and-oracle-18c-express-edition-xe/)).
 
 
 ### Build an Oracle Database 18c XE Container
 
-Create the following directories on your local filesystem:
+To begin, create the following directories on your local filesystem:
 
 - `/home/<username>/oradata`
-  - contains database and required database configuration files and preserves the database’s data and configuration files on the host file system in the event the container is deleted
+  - contains database and required database configuration files and preserves data and configuration files on the local filesystem in the event the container is deleted
 - `/home/<username>/scripts/setup`
-  - contains either shell or SQL scripts that are executed once after the database setup (creation) has been completed
+  - contains SQL scripts that are executed after the database creation has completed
 - `/home/<username>/scripts/startup`
-  - contains either shell or SQL scripts that are executed every time the container starts
+  - contains SQL scripts that are executed when the container starts
 
-The directories must be writable by user `UID 54321`, which is the Oracle user within the container. With root access, change the ownership of the directory:
+The directories must be writable by user `UID 54321`, which is the Oracle user within the container. With root access, change the ownership of the directories:
 
 ```
 $ chown 54321:54321 /home/<username>/oradata
@@ -463,3 +471,5 @@ $ minikube stop
 ```
 
 ### Summary
+
+We explored how the new Oracle JDBC drivers can be used to create native image executables and (via our simple example) demonstrated impressive performance improvements. Of course, having a Oracle Database container helps with testing and the added value of deploying in a kubernetes cluster further expands your testing environment.
